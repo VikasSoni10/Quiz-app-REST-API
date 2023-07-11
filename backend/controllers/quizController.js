@@ -2,14 +2,17 @@ const { Quiz, Submission } = require("../models/quizModel");
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const { v4: uuidv4 } = require("uuid");
+const dotenv = require("dotenv");
 
+dotenv.config({ path: "backend/config/config.env" });
+const port  = process.env.PORT;
 //Create quiz -- Creator
 
 exports.createQuiz = catchAsyncErrors(async (req, res, next) => {
   const quizId = uuidv4();
   const details = req.body;
   details.quizId = quizId;
-  const link = `http://localhost:4000/api/v1/quiz/${quizId}`;
+  const link = `${port}/api/v1/quiz/${quizId}`;
   details.share = link;
   const quiz = await Quiz.create(details);
   res.status(201).json({
